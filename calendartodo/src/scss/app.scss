@@ -1,0 +1,28 @@
+@import './calendar';
+@import './login';
+@import './userInfo';
+
+.App{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow-y: hidden;
+    width: 100vw;
+    height: 100vh;
+    background: hsla(217, 100%, 50%, 1);
+    background: linear-gradient(90deg, hsla(217, 100%, 50%, 1) 0%, hsla(186, 100%, 69%, 1) 100%);
+    background: -moz-linear-gradient(90deg, hsla(217, 100%, 50%, 1) 0%, hsla(186, 100%, 69%, 1) 100%);
+    background: -webkit-linear-gradient(90deg, #0062ff 0%, hsla(186, 100%, 69%, 1) 100%);
+    ::-webkit-scrollbar {
+        width: 5px;
+    }
+    ::-webkit-scrollbar-track {
+        box-shadow: inset 0 0 5px #fff; 
+        border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #0062ff; 
+        border-radius: 10px;
+    }
+}

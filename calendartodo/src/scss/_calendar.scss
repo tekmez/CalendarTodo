@@ -1,0 +1,18 @@
+.calendar{
+    width: 70%;
+    height: 70%;
+    overflow-y: auto;
+    color: #000;
+    background-color: #fff;
+    border-radius: 5px;
+}
+.calendar-add-btn{
+    margin-bottom: 15px;
+}
+.bg-danger, .bg-success, .bg-warning{
+    color: white !important;
+    :hover{
+        cursor: pointer !important;
+    }
+    border: none !important;
+}
