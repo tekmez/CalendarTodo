@@ -32,7 +32,7 @@ const TodoModal = ({ setEvents, events, setShow, show }) => {
       }
     ).catch((err) => console.log('Something went wrong', err));
   };
-  const updateTodoBtn = () => {
+  const updateTodoBtn = async () => {
     const todoDatas = {
       id: todoData.id,
       isCompleted: todoData.isCompleted,
@@ -41,14 +41,14 @@ const TodoModal = ({ setEvents, events, setShow, show }) => {
       content: todoContent,
       className: 'bg-warning',
     };
-    putFetchApi(todoDatas);
+    await putFetchApi(todoDatas);
     const todos = events.map((el) =>
       el.id === todoData.id ? (el = todoDatas) : el
     );
     setEvents([...todos]);
     setShow(false);
   };
-  const finishTodo = () => {
+  const finishTodo = async () => {
     const todoDatas = {
       id: todoData.id,
       isCompleted: true,
@@ -57,7 +57,7 @@ const TodoModal = ({ setEvents, events, setShow, show }) => {
       content: todoContent,
       className: 'bg-success',
     };
-    putFetchApi(todoDatas);
+    await putFetchApi(todoDatas);
     const todos = events.map((el) =>
       el.id === todoData.id ? (el = todoDatas) : el
     );

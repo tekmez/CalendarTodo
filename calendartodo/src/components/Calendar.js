@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import FullCalendar from '@fullcalendar/react'; // must go before plugins
 import dayGridPlugin from '@fullcalendar/daygrid'; // a plugin!
 import interactionPlugin from '@fullcalendar/interaction';
@@ -34,7 +34,7 @@ const Calendar = ({ events, setEvents, show2Modal }) => {
       }
     })();
   };
-  useEffect(() => {
+  const bg = useCallback(() => {
     const date = new Date();
     setEvents((current) =>
       current.map((obj) => {
@@ -44,7 +44,11 @@ const Calendar = ({ events, setEvents, show2Modal }) => {
         return obj;
       })
     );
-  }, []);
+  }, [setEvents]);
+
+  useEffect(() => {
+    bg();
+  }, [bg]);
 
   return (
     <>
@@ -88,4 +92,4 @@ const Calendar = ({ events, setEvents, show2Modal }) => {
   );
 };
 
-export default Calendar;
+export default React.memo(Calendar);

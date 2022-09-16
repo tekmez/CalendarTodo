@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
+import { Modal, Button, Form, Spinner } from 'react-bootstrap';
 
 const AddTodo = ({ setEvents, show, setShow }) => {
   const [todoName, setTodoName] = useState('');
   const [todoDate, setTodoDate] = useState('');
   const [todoContent, setTodoContent] = useState('');
+  const [showSpinner, setShowSpinner] = useState(false);
   const onHide = () => {
     setShow(false);
   };
   const addTodoBtn = () => {
+    setShowSpinner(true);
     const todoData = {
       title: todoName,
       start: todoDate,
@@ -17,21 +19,32 @@ const AddTodo = ({ setEvents, show, setShow }) => {
       id: todoName,
       isCompleted: false,
     };
-    fetch('https://631df7facc652771a48ef098.mockapi.io/todos', {
-      method: 'post',
-      body: JSON.stringify(todoData),
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((res) => res.json())
-      .then((json) => setEvents((state) => [...state, json]))
-      .catch((err) => console.log('Something went wrong', err));
-    setTodoContent('');
-    setTodoDate('');
-    setTodoName('');
-    setShow(false);
+    (async () => {
+      try {
+        const response = await fetch(
+          'https://631df7facc652771a48ef098.mockapi.io/todos',
+          {
+            method: 'post',
+            body: JSON.stringify(todoData),
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+        const json = await response.json();
+        await setEvents((state) => [...state, json]);
+        await setShowSpinner(false);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+    if (showSpinner === false) {
+      setTodoContent('');
+      setTodoDate('');
+      setTodoName('');
+      setShow(false);
+    }
   };
 
   return (
@@ -72,7 +85,10 @@ const AddTodo = ({ setEvents, show, setShow }) => {
           Close
         </Button>
         <Button variant="success" onClick={addTodoBtn}>
-          Add Todo
+          {showSpinner === true && (
+            <Spinner as="span" animation="border" size="sm" role="status" />
+          )}
+          {showSpinner === false && 'Add Todo'}
         </Button>
       </Modal.Footer>
     </Modal>
