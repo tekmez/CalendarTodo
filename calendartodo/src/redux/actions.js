@@ -6,3 +6,9 @@ export const setUser = (data) => {
     payload: data,
   };
 };
+export const setUpdateTodo = (data) => {
+  return {
+    type: CalendarActionTypes.UPDATE_TODO,
+    payload: data,
+  };
+};

@@ -1,62 +1,53 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import FullCalendar from '@fullcalendar/react'; // must go before plugins
 import dayGridPlugin from '@fullcalendar/daygrid'; // a plugin!
 import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import BootstrapTheme from '@fullcalendar/bootstrap';
-import { Button } from 'react-bootstrap';
-import AddTodo from './AddTodo';
+import { useDispatch } from 'react-redux';
+import { setUpdateTodo } from '../redux/actions';
 
-const Calendar = () => {
-  const [events, setEvents] = useState([]);
-  const [show, setShow] = useState(false);
+const Calendar = ({ events, setEvents, show2Modal }) => {
+  const dispatch = useDispatch();
   const handleDateClick = (arg) => {
     console.log(arg.dateStr);
   };
   const handleEventClick = (arg) => {
-    console.log(arg);
+    (async () => {
+      try {
+        const response = await fetch(
+          `https://631df7facc652771a48ef098.mockapi.io/todos/${arg.event._def.publicId}`,
+          {
+            method: 'get',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+        const json = await response.json();
+        await dispatch(setUpdateTodo(json));
+        await show2Modal(true);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
   };
-  const defaultEvents = [
-    {
-      id: 10,
-      title: 'Todo 1',
-      start: new Date(),
-      className: 'bg-warning',
-    },
-    {
-      id: 20,
-      title: 'Todo 2',
-      start: new Date().setDate(new Date().getDate() + 2),
-      className: 'bg-danger',
-    },
-    {
-      id: 30,
-      title: 'Todo 3',
-      start: new Date().setDate(new Date().getDate() + 2),
-      end: new Date().setDate(new Date().getDate() + 4),
-      className: 'bg-success',
-    },
-    {
-      id: 40,
-      title: 'Todo 4',
-      start: new Date().setDate(new Date().getDate() + 4),
-      end: new Date().setDate(new Date().getDate() + 5),
-      className: 'bg-warning',
-    },
-  ];
-  const showAddTodo = () => {
-    setShow(true);
-  };
-  const onHide = () => {
-    setShow(false);
-  };
-  const addTodo = () => {};
+  useEffect(() => {
+    const date = new Date();
+    setEvents((current) =>
+      current.map((obj) => {
+        if (new Date(obj.start).getTime() < date.getTime()) {
+          return { ...obj, className: 'bg-danger' };
+        }
+        return obj;
+      })
+    );
+  }, []);
+
   return (
     <>
-      <Button className="calendar-add-btn" onClick={showAddTodo}>
-        New Todo
-      </Button>
       <div className="calendar">
         <FullCalendar
           plugins={[
@@ -84,7 +75,7 @@ const Calendar = () => {
             right: 'dayGridMonth,dayGridWeek,dayGridDay',
           }}
           weekends={true}
-          events={defaultEvents}
+          events={events}
           dateClick={handleDateClick}
           selectable={true}
           editable={false}
@@ -93,7 +84,6 @@ const Calendar = () => {
           dayMaxEventRows={3}
         />
       </div>
-      <AddTodo show={show} onHide={onHide} addTodo={addTodo} />
     </>
   );
 };

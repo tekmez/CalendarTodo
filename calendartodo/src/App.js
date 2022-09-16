@@ -1,8 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import Calendar from './components/Calendar';
 import Login from './components/Login';
-import UserInfo from './components/UserInfo';
+import Home from './pages/Home';
 import './scss/app.scss';
 
 function App() {
@@ -10,12 +9,7 @@ function App() {
   return (
     <div className="App">
       {name === '' && <Login />}
-      {name !== '' && (
-        <>
-          <UserInfo />
-          <Calendar />
-        </>
-      )}
+      {name !== '' && <Home />}
     </div>
   );
 }

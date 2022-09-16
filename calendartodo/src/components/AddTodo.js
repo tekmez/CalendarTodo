@@ -1,9 +1,39 @@
 import React, { useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 
-const AddTodo = ({ show, onHide, addTodo }) => {
+const AddTodo = ({ setEvents, show, setShow }) => {
   const [todoName, setTodoName] = useState('');
   const [todoDate, setTodoDate] = useState('');
+  const [todoContent, setTodoContent] = useState('');
+  const onHide = () => {
+    setShow(false);
+  };
+  const addTodoBtn = () => {
+    const todoData = {
+      title: todoName,
+      start: todoDate,
+      content: todoContent,
+      className: 'bg-warning',
+      id: todoName,
+      isCompleted: false,
+    };
+    fetch('https://631df7facc652771a48ef098.mockapi.io/todos', {
+      method: 'post',
+      body: JSON.stringify(todoData),
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((res) => res.json())
+      .then((json) => setEvents((state) => [...state, json]))
+      .catch((err) => console.log('Something went wrong', err));
+    setTodoContent('');
+    setTodoDate('');
+    setTodoName('');
+    setShow(false);
+  };
+
   return (
     <Modal
       show={show}
@@ -28,12 +58,20 @@ const AddTodo = ({ show, onHide, addTodo }) => {
           value={todoDate}
           onChange={(e) => setTodoDate(e.target.value)}
         />
+        <textarea
+          style={{ marginTop: '10px' }}
+          rows={3}
+          cols={101}
+          placeholder="You can add todo details"
+          value={todoContent}
+          onChange={(e) => setTodoContent(e.target.value)}
+        />
       </Modal.Body>
       <Modal.Footer>
         <Button style={{ color: 'white' }} variant="warning" onClick={onHide}>
           Close
         </Button>
-        <Button variant="success" onClick={addTodo}>
+        <Button variant="success" onClick={addTodoBtn}>
           Add Todo
         </Button>
       </Modal.Footer>
