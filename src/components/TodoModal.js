@@ -89,7 +89,9 @@ const TodoModal = ({ setEvents, events, setShow, show }) => {
       centered
     >
       <Modal.Header>
-        <Modal.Title id="contained-modal-title-vcenter">Add Todo</Modal.Title>
+        <Modal.Title id="contained-modal-title-vcenter">
+          Update Todo
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <span>Todo Name</span>
